@@ -12,6 +12,7 @@ def get_data(name,color,age):
     print("Sheep information added")
     conn.commit()
     conn.close()
+    sheep_pen()
 
 def search(id):
     conn = psycopg2.connect(dbname="postgres", user="postgres", password="2349", host="localhost", port="5432")
@@ -25,8 +26,21 @@ def search(id):
 
 def info_display(row):
     listbox = Listbox(frame,width=21,height=1)
-    listbox.grid(row=9, column=1)
+    listbox.grid(row=8, column=1)
     listbox.insert(END,row)
+
+def sheep_pen():
+    conn = psycopg2.connect(dbname="postgres", user="postgres", password="2349", host="localhost", port="5432")
+    cur = conn.cursor()
+    query = '''select * from demo'''
+    cur.execute(query)
+    row = cur.fetchall()
+    listbox = Listbox(frame,width=21,height=5)
+    listbox.grid(row=11, column=1)
+    for x in row:
+        listbox.insert(END,x)
+  
+  
 
 canvas = Canvas(root,height=480,width=900) # Canvas is rectangle space that is for complex elements
 canvas.pack()
@@ -68,5 +82,13 @@ id_search.grid(row=7, column=1)
 
 button = Button(frame, text="Find",command=lambda:search(id_search.get()))
 button.grid(row=7,column=2)
+
+label = Label(frame,text="")
+label.grid(row=9)
+
+label = Label(frame,text="The Sheep Pen")
+label.grid(row=10,column=1)
+
+sheep_pen()
 
 root.mainloop()
