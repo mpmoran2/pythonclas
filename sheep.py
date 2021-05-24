@@ -13,6 +13,21 @@ def get_data(name,color,age):
     conn.commit()
     conn.close()
 
+def search(id):
+    conn = psycopg2.connect(dbname="postgres", user="postgres", password="2349", host="localhost", port="5432")
+    cur = conn.cursor()
+    query = '''select * from demo where id=%s'''
+    cur.execute(query,(id))
+    row = cur.fetchone()
+    info_display(row)
+    conn.commit()
+    conn.close()
+
+def info_display(row):
+    listbox = Listbox(frame,width=21,height=1)
+    listbox.grid(row=9, column=1)
+    listbox.insert(END,row)
+
 canvas = Canvas(root,height=480,width=900) # Canvas is rectangle space that is for complex elements
 canvas.pack()
 
@@ -39,5 +54,19 @@ entry_age.grid(row=3,column=1)
 
 button = Button(frame,text="Submit Sheep",command=lambda:get_data(entry_name.get(),entry_color.get(),entry_age.get()))
 button.grid(row=4,column=1)
+
+label = Label(frame,text="")
+label.grid(row=5)
+
+lookit = Label(frame,text="Search for Sheep:")
+lookit.grid(row=6, column=1)
+
+searchlabel = Label(frame,text="Sheep ID")
+searchlabel.grid(row=7,column=0)
+id_search = Entry(frame)
+id_search.grid(row=7, column=1)
+
+button = Button(frame, text="Find",command=lambda:search(id_search.get()))
+button.grid(row=7,column=2)
 
 root.mainloop()
